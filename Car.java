@@ -10,7 +10,9 @@ public class Car implements Movable{
 
     Utils.Vector2d position = new Utils.Vector2d(0,0);
     double angle;
-    Utils.Vector2d rotation = new Utils.Vector2d(1,1);
+    Utils.Vector2d rotation = new Utils.Vector2d(1,0);
+
+    Utils.Vector2d forceDirection = new Utils.Vector2d(1,0);
 
 
     public int getNrDoors(){
@@ -64,18 +66,21 @@ public class Car implements Movable{
 
     @Override
     public void move() {
+
+        Utils.Vector2d diff = new Utils.Vector2d(forceDirection.x - rotation.x, forceDirection.y - rotation.y);
+        rotation = new Utils.Vector2d(rotation.x + (diff.x/50), rotation.y + (diff.y/50));
         position = new Utils.Vector2d((float) (position.x + rotation.x*currentSpeed), (float) (position.y+ rotation.y*currentSpeed));
     }
 
     @Override
     public void turnLeft() {
         angle -= 0.2;
-        rotation = new Utils.Vector2d(Math.cos(angle), Math.sin(angle));
+        forceDirection = new Utils.Vector2d(Math.cos(angle), Math.sin(angle));
     }
 
     @Override
     public void turnRight() {
         angle += 0.2;
-        rotation = new Utils.Vector2d(Math.cos(angle), Math.sin(angle));
+        forceDirection = new Utils.Vector2d(Math.cos(angle), Math.sin(angle));
     }
 }
