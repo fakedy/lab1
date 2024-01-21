@@ -163,6 +163,7 @@ public class CarGame extends JPanel implements Runnable{
 
 
 
+        drawCarShadow(g2);
         drawCar(g2);
 
 
@@ -234,6 +235,30 @@ public class CarGame extends JPanel implements Runnable{
 
         g2.fillRect(carX + carBodySize.x - carWheelSize.x, carY + carBodySize.y , carWheelSize.x, carWheelSize.y); // Front right wheel
         g2.fillRect(carX + carBodySize.x - carWheelSize.x, carY - carWheelSize.y, carWheelSize.x, carWheelSize.y); // Front left wheel
+
+    }
+
+    private void drawCarShadow(Graphics2D g2){
+
+        AffineTransform transform = new AffineTransform();
+
+        int carShadowX = carX-carBodySize.x/4;
+        int carShadowY = carY;
+
+        transform.rotate(car.angle, carShadowX+(carBodySize.x), carShadowY+(carBodySize.y/2));
+
+        g2.setTransform(transform);
+        // body
+        g2.setColor(Color.BLACK);
+        g2.fillRect(carShadowX, carShadowY, carBodySize.x,carBodySize.y);
+
+        // wheels
+        g2.setColor(Color.BLACK);
+        g2.fillRect(carShadowX, carShadowY + carBodySize.y , carWheelSize.x, carWheelSize.y); // Back right wheel
+        g2.fillRect(carShadowX, carShadowY- carWheelSize.y, carWheelSize.x, carWheelSize.y); // back left wheel
+
+        g2.fillRect(carShadowX + carBodySize.x - carWheelSize.x, carShadowY + carBodySize.y , carWheelSize.x, carWheelSize.y); // Front right wheel
+        g2.fillRect(carShadowX + carBodySize.x - carWheelSize.x, carShadowY - carWheelSize.y, carWheelSize.x, carWheelSize.y); // Front left wheel
 
     }
 }

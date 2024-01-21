@@ -1,5 +1,5 @@
 import java.awt.*;
-public class Car implements Movable{
+public abstract class Car implements Movable{
 
     public int nrDoors; // Number of doors on the car
 
@@ -69,7 +69,7 @@ public class Car implements Movable{
     public void move() {
 
         diff = new Utils.Vector2d(forceDirection.x - rotation.x, forceDirection.y - rotation.y);
-        rotation = new Utils.Vector2d(rotation.x + (diff.x/50), rotation.y + (diff.y/50));
+        rotation = new Utils.Vector2d(rotation.x + (diff.x/80), rotation.y + (diff.y/80));
         position = new Utils.Vector2d((float) (position.x + rotation.x*currentSpeed), (float) (position.y+ rotation.y*currentSpeed));
     }
 
