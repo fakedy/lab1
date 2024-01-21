@@ -14,6 +14,7 @@ public class KeyHandler implements KeyListener {
     public void keyPressed(KeyEvent e) {
         int code = e.getKeyCode();
 
+
         if(code == KeyEvent.VK_UP) {
             upPressed=true;
 
@@ -29,6 +30,8 @@ public class KeyHandler implements KeyListener {
             rightPressed=true;
 
         }
+
+
 
     }
 

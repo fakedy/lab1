@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
+import java.util.ArrayList;
 
 import static java.lang.System.out;
 
@@ -23,8 +24,13 @@ public class CarGame extends JPanel implements Runnable{
 
     //car default position = 100;
 
-    int carX=screenWidth/2;
-    int carY=screenHeight/2;
+    int carX;
+    int carY;
+
+    int lastCarX;
+    int lastCarY;
+
+    ArrayList<Integer> trails = new ArrayList<>();
 
 
     Car car = new Saab95();
@@ -149,31 +155,19 @@ public class CarGame extends JPanel implements Runnable{
         g2.clearRect(0,0,screenWidth,screenHeight);
 
 
-        drawParkingLot(g);
+        drawParkingLot(g2);
+
+        drawWheelTrails(g2);
 
 
 
 
 
+        drawCar(g2);
 
 
 
-        AffineTransform transform = new AffineTransform();
 
-        transform.rotate(car.angle, carX+(carBodySize.x), carY+(carBodySize.y/2));
-        g2.setTransform(transform);
-
-        // body
-        g2.setColor(car.getColor());
-        g2.fillRect(carX, carY, carBodySize.x,carBodySize.y);
-
-        // wheels
-        g2.setColor(Color.GRAY);
-        g2.fillRect(carX, carY + carBodySize.y , carWheelSize.x, carWheelSize.y); // Back right wheel
-        g2.fillRect(carX, carY- carWheelSize.y, carWheelSize.x, carWheelSize.y); // back left wheel
-
-        g2.fillRect(carX + carBodySize.x - carWheelSize.x, carY + carBodySize.y , carWheelSize.x, carWheelSize.y); // Front right wheel
-        g2.fillRect(carX + carBodySize.x - carWheelSize.x, carY - carWheelSize.y, carWheelSize.x, carWheelSize.y); // Front left wheel
 
         g2.dispose();
 
@@ -187,22 +181,59 @@ public class CarGame extends JPanel implements Runnable{
         g2.dispose();
     }
 
-    private void drawParkingLot(Graphics g2){
+    private void drawParkingLot(Graphics2D g2){
 
         g2.setColor(Color.WHITE);
 
         for(int x = 0; x < screenWidth; x = x+50){
             for(int y = 0; y < screenHeight; y = y+250){
-
                 g2.fillRect(x+2, y, 5, 50);
                 g2.fillRect(x+2, y, 25, 5);
-
-
             }
         }
 
+    }
 
+    private void drawWheelTrails(Graphics2D g2){
 
+        // wanted to add trails to tires but not following rotation of car.
+        g2.setColor(Color.BLACK);
+        if(trails.size() >= 4){
+            for(int i = 0; i < trails.size(); i = i + 4){
+                g2.drawLine(trails.get(0+i), trails.get(1+i),trails.get(2+i) , trails.get(3+i));
+                g2.drawLine(trails.get(0+i)+1, (trails.get(1+i)+carWheelSize.y+carBodySize.y),trails.get(2+i) , trails.get(3+i)+carWheelSize.y+carBodySize.y);
+            }
+        }
+
+        if(Math.abs(car.diff.x) + Math.abs(car.diff.y) > 0.9){  // force required for tires to skid
+            trails.add(lastCarX);
+            trails.add(lastCarY);
+            trails.add(carX);
+            trails.add(carY);
+
+        }
+        lastCarX = carX;
+        lastCarY = carY;
+    }
+
+    private void drawCar(Graphics2D g2){
+
+        AffineTransform transform = new AffineTransform();
+
+        transform.rotate(car.angle, carX+(carBodySize.x), carY+(carBodySize.y/2));
+
+        g2.setTransform(transform);
+        // body
+        g2.setColor(car.getColor());
+        g2.fillRect(carX, carY, carBodySize.x,carBodySize.y);
+
+        // wheels
+        g2.setColor(Color.GRAY);
+        g2.fillRect(carX, carY + carBodySize.y , carWheelSize.x, carWheelSize.y); // Back right wheel
+        g2.fillRect(carX, carY- carWheelSize.y, carWheelSize.x, carWheelSize.y); // back left wheel
+
+        g2.fillRect(carX + carBodySize.x - carWheelSize.x, carY + carBodySize.y , carWheelSize.x, carWheelSize.y); // Front right wheel
+        g2.fillRect(carX + carBodySize.x - carWheelSize.x, carY - carWheelSize.y, carWheelSize.x, carWheelSize.y); // Front left wheel
 
     }
 }
