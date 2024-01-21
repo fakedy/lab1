@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
+import java.util.Random;
 
 import static java.lang.System.out;
 
@@ -33,7 +34,7 @@ public class CarGame extends JPanel implements Runnable{
     ArrayList<Integer> trails = new ArrayList<>();
 
 
-    Car car = new Saab95();
+    Car playerCar = new Saab95();
 
     public CarGame () {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -88,55 +89,55 @@ public class CarGame extends JPanel implements Runnable{
     public void update(){
 
         if(keyH.upPressed) {
-            car.gas(0.1);
-            out.println("GAS, speed: " + car.currentSpeed);
+            playerCar.gas(0.1);
+            out.println("GAS, speed: " + playerCar.currentSpeed);
 
 
         }
         else if(keyH.downPressed) {
-            car.brake(0.1);
-            out.println("BRAKE, speed: " + car.currentSpeed);
+            playerCar.brake(0.1);
+            out.println("BRAKE, speed: " + playerCar.currentSpeed);
 
         }
 
         else if(keyH.leftPressed) {
-            car.turnLeft();
+            playerCar.turnLeft();
 
             out.println("left");
-            out.println(car.rotation);
+            out.println(playerCar.rotation);
             keyH.leftPressed=false;
         }
         else if(keyH.rightPressed) {
-            car.turnRight();
+            playerCar.turnRight();
 
             out.println("right");
-            out.println(car.rotation);
+            out.println(playerCar.rotation);
             keyH.rightPressed=false;
         }
 
 
 
         // collision checks
-        if (car.position.x > screenWidth-10) {
-            car.position.x = screenWidth-10;
+        if (playerCar.position.x > screenWidth-10) {
+            playerCar.position.x = screenWidth-10;
         }
-        if(car.position.x < 0) {
-            car.position.x=0;
+        if(playerCar.position.x < 0) {
+            playerCar.position.x=0;
         }
 
-        if (car.position.y > screenHeight-10) {
-            car.position.y = screenHeight-10;
+        if (playerCar.position.y > screenHeight-10) {
+            playerCar.position.y = screenHeight-10;
         }
-        if(car.position.y < 0) {
-            car.position.y = 0;
+        if(playerCar.position.y < 0) {
+            playerCar.position.y = 0;
         }
 
         // update graphics according to car
-        carX = (int) car.position.x;
-        carY = (int) car.position.y;
+        carX = (int) playerCar.position.x;
+        carY = (int) playerCar.position.y;
 
         // update car position
-        car.move();
+        playerCar.move();
 
     }
 
@@ -157,18 +158,10 @@ public class CarGame extends JPanel implements Runnable{
 
         drawParkingLot(g2);
 
-        drawWheelTrails(g2);
+        drawWheelTrails(g2, playerCar);
 
 
-
-
-
-        drawCarShadow(g2);
-        drawCar(g2);
-
-
-
-
+        drawCar(g2, playerCar);
 
         g2.dispose();
 
@@ -178,24 +171,34 @@ public class CarGame extends JPanel implements Runnable{
         Graphics2D g2 = (Graphics2D) g;
 
         g2.setColor(Color.black);
-        g2.drawString(String.valueOf(car.getCurrentSpeed()),20, 20);
+        g2.drawString(String.valueOf(playerCar.getCurrentSpeed()),20, 20);
         g2.dispose();
     }
 
     private void drawParkingLot(Graphics2D g2){
 
-        g2.setColor(Color.WHITE);
+        Random rand = new Random(12312);
 
         for(int x = 0; x < screenWidth; x = x+50){
             for(int y = 0; y < screenHeight; y = y+250){
+                g2.setColor(Color.WHITE);
                 g2.fillRect(x+2, y, 5, 50);
                 g2.fillRect(x+2, y, 25, 5);
+                if(rand.nextInt(0,10) > 8){
+                    Car parkedCar = new Volvo240();
+                    parkedCar.position = new Utils.Vector2d(x- carBodySize.x/2.5,y + carBodySize.y*2.8); // 2.8 magic number wohoo
+                    parkedCar.angle = 90*Math.PI/180;
+                    parkedCar.setColor(Color.green);
+                    drawCar(g2, parkedCar);
+                }
             }
         }
 
     }
 
-    private void drawWheelTrails(Graphics2D g2){
+
+
+    private void drawWheelTrails(Graphics2D g2, Car car){
 
         // wanted to add trails to tires but not following rotation of car.
         g2.setColor(Color.BLACK);
@@ -217,13 +220,21 @@ public class CarGame extends JPanel implements Runnable{
         lastCarY = carY;
     }
 
-    private void drawCar(Graphics2D g2){
+    private void drawCar(Graphics2D g2, Car car){
+
+        int carX = (int) car.position.x;
+        int carY = (int) car.position.y;
 
         AffineTransform transform = new AffineTransform();
+        AffineTransform oldTransform = g2.getTransform();
 
         transform.rotate(car.angle, carX+(carBodySize.x), carY+(carBodySize.y/2));
 
         g2.setTransform(transform);
+
+        drawCarShadow(g2, car);
+
+
         // body
         g2.setColor(car.getColor());
         g2.fillRect(carX, carY, carBodySize.x,carBodySize.y);
@@ -236,12 +247,18 @@ public class CarGame extends JPanel implements Runnable{
         g2.fillRect(carX + carBodySize.x - carWheelSize.x, carY + carBodySize.y , carWheelSize.x, carWheelSize.y); // Front right wheel
         g2.fillRect(carX + carBodySize.x - carWheelSize.x, carY - carWheelSize.y, carWheelSize.x, carWheelSize.y); // Front left wheel
 
+        g2.setTransform(oldTransform);
+
+
     }
 
-    private void drawCarShadow(Graphics2D g2){
+    private void drawCarShadow(Graphics2D g2, Car car){
 
         AffineTransform transform = new AffineTransform();
+        AffineTransform oldTransform = g2.getTransform();
 
+        int carX = (int) car.position.x;
+        int carY = (int) car.position.y;
         int carShadowX = carX-carBodySize.x/4;
         int carShadowY = carY;
 
@@ -259,6 +276,8 @@ public class CarGame extends JPanel implements Runnable{
 
         g2.fillRect(carShadowX + carBodySize.x - carWheelSize.x, carShadowY + carBodySize.y , carWheelSize.x, carWheelSize.y); // Front right wheel
         g2.fillRect(carShadowX + carBodySize.x - carWheelSize.x, carShadowY - carWheelSize.y, carWheelSize.x, carWheelSize.y); // Front left wheel
+
+        g2.setTransform(oldTransform);
 
     }
 }
