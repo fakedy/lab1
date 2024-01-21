@@ -61,7 +61,7 @@ public abstract class Car implements Movable{
         decrementSpeed(amount);
     }
 
-    private double speedFactor(){
+    protected double speedFactor(){
         return enginePower * 0.01;
     }
 
@@ -84,4 +84,5 @@ public abstract class Car implements Movable{
         angle += 0.2;
         forceDirection = new Utils.Vector2d(Math.cos(angle), Math.sin(angle));
     }
+
 }

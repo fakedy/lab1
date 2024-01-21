@@ -196,8 +196,6 @@ public class CarGame extends JPanel implements Runnable{
 
     }
 
-
-
     private void drawWheelTrails(Graphics2D g2, Car car){
 
         // wanted to add trails to tires but not following rotation of car.
