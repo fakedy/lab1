@@ -1,3 +1,5 @@
+package src;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -104,14 +106,12 @@ public class CarGame extends JPanel implements Runnable{
             playerCar.turnLeft();
 
             out.println("left");
-            out.println(playerCar.rotation);
             keyH.leftPressed=false;
         }
         else if(keyH.rightPressed) {
             playerCar.turnRight();
 
             out.println("right");
-            out.println(playerCar.rotation);
             keyH.rightPressed=false;
         }
 
