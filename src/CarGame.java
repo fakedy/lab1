@@ -181,7 +181,8 @@ public class CarGame extends JPanel implements Runnable{
         // Pretty bad code.
         // we use a seed to not get flickering cars because cars would spawn at random locations every loop.
         // we create new objects instead of using same cars every time.
-        // we should instead have a list of cars that we can iterate over to render.
+        // we should instead have a list of cars in parking lot that we can iterate over to render.
+        // maybe create parking lot object
         Random rand = new Random(12312);
 
         for(int x = 0; x < screenWidth; x = x+50){
@@ -222,12 +223,13 @@ public class CarGame extends JPanel implements Runnable{
         if(Math.abs(car.diff.x) + Math.abs(car.diff.y) > 0.9){  // force required for tires to skid
             trails.add(lastCarX);
             trails.add(lastCarY);
-            trails.add(carX);
-            trails.add(carY);
+
+            trails.add((int) (carX + carBodySize.x + Math.cos(car.angle)*-carBodySize.x));
+            trails.add((int) (carY + Math.sin(car.angle)*-carBodySize.x));
 
         }
-        lastCarX = carX;
-        lastCarY = carY;
+        lastCarX = (int) (carX + carBodySize.x + Math.cos(car.angle)*-carBodySize.x);
+        lastCarY = (int) (carY + Math.sin(car.angle)*-carBodySize.x);
     }
 
     private void drawCar(Graphics2D g2, Car car){

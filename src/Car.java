@@ -16,7 +16,7 @@ public abstract class Car implements Movable{
     public double angle;
     public Utils.Vector2d rotation = new Utils.Vector2d(1,0);
     public Utils.Vector2d diff;
-    public Utils.Vector2d forceDirection = new Utils.Vector2d(1,0);
+    private Utils.Vector2d forceDirection = new Utils.Vector2d(1,0);
 
 
 
