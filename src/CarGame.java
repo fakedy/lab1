@@ -145,7 +145,8 @@ public class CarGame extends JPanel implements Runnable{
 
         super.paintComponent(g);
         draw(g);
-        draw2(g);
+        drawHUD(g);
+        g.dispose();
     }
 
     public void draw(Graphics g) {
@@ -163,20 +164,24 @@ public class CarGame extends JPanel implements Runnable{
 
         drawCar(g2, playerCar);
 
-        g2.dispose();
 
     }
 
-    public void draw2(Graphics g) {
+    public void drawHUD(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
 
         g2.setColor(Color.black);
-        g2.drawString(String.valueOf(playerCar.getCurrentSpeed()),20, 20);
-        g2.dispose();
+        g2.drawString("Speed of car",20, screenHeight-100);
+        g2.setColor(Color.blue);
+        g2.fillRect(30,screenHeight-50, (int)playerCar.getCurrentSpeed()*20, 40);
     }
 
     private void drawParkingLot(Graphics2D g2){
 
+        // Pretty bad code.
+        // we use a seed to not get flickering cars because cars would spawn at random locations every loop.
+        // we create new objects instead of using same cars every time.
+        // we should instead have a list of cars that we can iterate over to render.
         Random rand = new Random(12312);
 
         for(int x = 0; x < screenWidth; x = x+50){
@@ -188,8 +193,15 @@ public class CarGame extends JPanel implements Runnable{
                     Car parkedCar = new Volvo240();
                     parkedCar.position = new Utils.Vector2d(x- carBodySize.x/2.5,y + carBodySize.y*2.8); // 2.8 magic number wohoo
                     parkedCar.angle = 90*Math.PI/180;
-                    parkedCar.setColor(Color.green);
+                    if(rand.nextInt(0,10) > 4) {
+                        parkedCar.setColor(Color.green);
+                    } else if (rand.nextInt(0,10) > 1) {
+                        parkedCar.setColor(Color.yellow);
+                    } else {
+                        parkedCar.setColor(Color.blue);
+                    }
                     drawCar(g2, parkedCar);
+                    parkedCar = null; // prevent what I assume is a memory leak
                 }
             }
         }
