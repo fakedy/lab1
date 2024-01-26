@@ -6,8 +6,6 @@ import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 import java.util.Random;
 
-import static java.lang.System.out;
-
 public class CarGame extends JPanel implements Runnable{
     final int originalTileSize=10;
     final int scale=1;
@@ -36,7 +34,7 @@ public class CarGame extends JPanel implements Runnable{
     ArrayList<Integer> trails = new ArrayList<>();
 
 
-    Car playerCar = new Saab95();
+    Truck playerCar = new Scania();
 
     public CarGame () {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -92,25 +90,33 @@ public class CarGame extends JPanel implements Runnable{
 
         if(keyH.upPressed) {
             playerCar.gas(0.1);
-            out.println("GAS, speed: " + playerCar.currentSpeed);
+            //out.println("GAS, speed: " + playerCar.currentSpeed);
 
 
         }
         else if(keyH.downPressed) {
             playerCar.brake(0.1);
-            out.println("BRAKE, speed: " + playerCar.currentSpeed);
+            //out.println("BRAKE, speed: " + playerCar.currentSpeed);
 
         }
 
         else if(keyH.leftPressed) {
             playerCar.turnLeft();
 
-            out.println("left");
+
         }
         else if(keyH.rightPressed) {
             playerCar.turnRight();
 
-            out.println("right");
+
+        } else if(keyH.twoPressed){
+            playerCar.raiseFlatbed();
+            System.out.println(playerCar.getFlatbedAngle());
+            keyH.twoPressed = false;
+        } else if(keyH.onePressed){
+            playerCar.lowerFlatbed();
+            System.out.println(playerCar.getFlatbedAngle());
+            keyH.onePressed = false;
         }
 
 

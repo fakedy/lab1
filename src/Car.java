@@ -8,7 +8,7 @@ public abstract class Car implements Movable{
     protected final double enginePower; // Engine power of the car
     protected double currentSpeed; // The current speed of the car
     private Color color; // Color of the car
-    public final String modelName; // The car model name
+    private final String modelName; // The car model name
 
     // following methods were added to implement the game.
     // Would prefer to have get and set functions.
