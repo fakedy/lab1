@@ -2,10 +2,11 @@ package src;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
-import java.util.ArrayList;
+
 import java.util.Random;
 
-public class CarGame extends Game{
+public class TruckGame extends Game {
+
     final int scale=1;
 
     // car graphics
@@ -20,17 +21,13 @@ public class CarGame extends Game{
     int lastCarX;
     int lastCarY;
 
-    ArrayList<Integer> trails = new ArrayList<>();
+    Truck playerCar = new VolvoVAH300();
 
-
-    Car playerCar = new Saab95();
-
-    public CarGame () {
+    public TruckGame () {
     }
 
 
-
-@Override
+    @Override
     public void update(){
 
         if(keyH.upPressed) {
@@ -55,10 +52,12 @@ public class CarGame extends Game{
 
 
         } else if(keyH.twoPressed){
-
+            playerCar.raiseRamp();
+            System.out.println(playerCar.getRampAngle());
             keyH.twoPressed = false;
         } else if(keyH.onePressed){
-
+            playerCar.lowerRamp();
+            System.out.println(playerCar.getRampAngle());
             keyH.onePressed = false;
         }
 
@@ -89,7 +88,6 @@ public class CarGame extends Game{
     }
 
     public void paintComponent(Graphics g){
-
         super.paintComponent(g);
         draw(g);
         drawHUD(g);
@@ -106,7 +104,6 @@ public class CarGame extends Game{
 
         drawParkingLot(g2);
 
-        drawWheelTrails(g2, playerCar);
 
 
         drawCar(g2, playerCar);
@@ -156,28 +153,6 @@ public class CarGame extends Game{
 
     }
 
-    private void drawWheelTrails(Graphics2D g2, Car car){
-
-        // wanted to add trails to tires but not following rotation of car.
-        g2.setColor(Color.BLACK);
-        if(trails.size() >= 4){
-            for(int i = 0; i < trails.size(); i = i + 4){
-                g2.drawLine(trails.get(0+i), trails.get(1+i),trails.get(2+i) , trails.get(3+i));
-                g2.drawLine(trails.get(0+i)+1, (trails.get(1+i)+carWheelSize.y+carBodySize.y),trails.get(2+i) , trails.get(3+i)+carWheelSize.y+carBodySize.y);
-            }
-        }
-
-        if(Math.abs(car.diff.x) + Math.abs(car.diff.y) > 0.9){  // force required for tires to skid
-            trails.add(lastCarX);
-            trails.add(lastCarY);
-
-            trails.add((int) (carX + carBodySize.x + Math.cos(car.angle)*-carBodySize.x));
-            trails.add((int) (carY + Math.sin(car.angle)*-carBodySize.x));
-
-        }
-        lastCarX = (int) (carX + carBodySize.x + Math.cos(car.angle)*-carBodySize.x);
-        lastCarY = (int) (carY + Math.sin(car.angle)*-carBodySize.x);
-    }
 
     private void drawCar(Graphics2D g2, Car car){
 
@@ -240,3 +215,4 @@ public class CarGame extends Game{
 
     }
 }
+

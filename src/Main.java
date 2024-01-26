@@ -14,16 +14,17 @@ public class Main {
         window.setTitle("2D WORLD");
 
 
-        CarGame carGame = new CarGame();
-        window.add(carGame);
+        Game game = new TruckGame();
+        //CarGame carGame = new CarGame();
 
+
+
+        window.add(game);
         window.pack();
-
-
         window.setLocationRelativeTo(null);
         window.setVisible(true);
 
-        carGame.startGameThread();
+        game.startGameThread();
 
 
 

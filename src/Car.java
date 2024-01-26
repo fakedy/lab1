@@ -7,6 +7,8 @@ public abstract class Car implements Movable{
 
     protected final double enginePower; // Engine power of the car
     protected double currentSpeed; // The current speed of the car
+
+    protected double turnSpeed = 0.05;
     private Color color; // Color of the car
     private final String modelName; // The car model name
 
@@ -16,7 +18,7 @@ public abstract class Car implements Movable{
     public double angle;
     public Utils.Vector2d rotation = new Utils.Vector2d(1,0);
     public Utils.Vector2d diff;
-    private Utils.Vector2d forceDirection = new Utils.Vector2d(1,0);
+    protected Utils.Vector2d forceDirection = new Utils.Vector2d(1,0);
 
 
 
@@ -101,22 +103,22 @@ public abstract class Car implements Movable{
         return enginePower * 0.01;
     }
 
-    @Override
+
     public void move() {
         diff = new Utils.Vector2d(forceDirection.x - rotation.x, forceDirection.y - rotation.y);
         rotation = new Utils.Vector2d(rotation.x + (diff.x/80), rotation.y + (diff.y/80));
         position = new Utils.Vector2d((float) (position.x + rotation.x*currentSpeed), (float) (position.y+ rotation.y*currentSpeed));
     }
 
-    @Override
+
     public void turnLeft() {
-        angle -= 0.05;
+        angle -= turnSpeed;
         forceDirection = new Utils.Vector2d(Math.cos(angle), Math.sin(angle));
     }
 
-    @Override
+
     public void turnRight() {
-        angle += 0.05;
+        angle += turnSpeed;
         forceDirection = new Utils.Vector2d(Math.cos(angle), Math.sin(angle));
     }
 
