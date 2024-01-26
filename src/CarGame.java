@@ -106,13 +106,11 @@ public class CarGame extends JPanel implements Runnable{
             playerCar.turnLeft();
 
             out.println("left");
-            keyH.leftPressed=false;
         }
         else if(keyH.rightPressed) {
             playerCar.turnRight();
 
             out.println("right");
-            keyH.rightPressed=false;
         }
 
 

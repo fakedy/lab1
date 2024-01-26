@@ -110,13 +110,13 @@ public abstract class Car implements Movable{
 
     @Override
     public void turnLeft() {
-        angle -= 0.2;
+        angle -= 0.05;
         forceDirection = new Utils.Vector2d(Math.cos(angle), Math.sin(angle));
     }
 
     @Override
     public void turnRight() {
-        angle += 0.2;
+        angle += 0.05;
         forceDirection = new Utils.Vector2d(Math.cos(angle), Math.sin(angle));
     }
 
