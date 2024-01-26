@@ -3,6 +3,7 @@ package src;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class TruckGame extends Game {
@@ -18,12 +19,13 @@ public class TruckGame extends Game {
     int carX;
     int carY;
 
-    int lastCarX;
-    int lastCarY;
+    private ArrayList<Car> parkedCars = new ArrayList<>();
 
     Truck playerCar = new VolvoVAH300();
 
     public TruckGame () {
+
+        fillParkingLot();
     }
 
 
@@ -104,9 +106,11 @@ public class TruckGame extends Game {
 
         drawParkingLot(g2);
 
-
-
         drawCar(g2, playerCar);
+
+        for(Car parkedCar : parkedCars){
+            drawCar(g2, parkedCar);
+        }
 
 
     }
@@ -120,34 +124,29 @@ public class TruckGame extends Game {
         g2.fillRect(30,screenHeight-50, (int)playerCar.getCurrentSpeed()*20, 40);
     }
 
-    private void drawParkingLot(Graphics2D g2){
+    private void fillParkingLot() {
 
-        // Pretty bad code.
-        // we use a seed to not get flickering cars because cars would spawn at random locations every loop.
-        // we create new objects instead of using same cars every time.
-        // we should instead have a list of cars in parking lot that we can iterate over to render.
-        // maybe create parking lot object
         Random rand = new Random(12312);
+        for (int x = 0; x < screenWidth; x = x + 50) {
+            for (int y = 0; y < screenHeight; y = y + 250) {
+                if(rand.nextInt(0,10) > 8) {
+                    Car parkedCar = new Volvo240();
+                    parkedCar.setColor(Color.yellow);
+                    parkedCar.position = new Utils.Vector2d(x - carBodySize.x / 2.5, y + carBodySize.y * 2.8); // 2.8 magic number wohoo
+                    parkedCar.angle = 90 * Math.PI / 180;
+                    parkedCars.add(parkedCar);
+                }
+            }
+        }
+    }
+
+    private void drawParkingLot(Graphics2D g2){
 
         for(int x = 0; x < screenWidth; x = x+50){
             for(int y = 0; y < screenHeight; y = y+250){
                 g2.setColor(Color.WHITE);
                 g2.fillRect(x+2, y, 5, 50);
                 g2.fillRect(x+2, y, 25, 5);
-                if(rand.nextInt(0,10) > 8){
-                    Car parkedCar = new Volvo240();
-                    parkedCar.position = new Utils.Vector2d(x- carBodySize.x/2.5,y + carBodySize.y*2.8); // 2.8 magic number wohoo
-                    parkedCar.angle = 90*Math.PI/180;
-                    if(rand.nextInt(0,10) > 4) {
-                        parkedCar.setColor(Color.green);
-                    } else if (rand.nextInt(0,10) > 1) {
-                        parkedCar.setColor(Color.yellow);
-                    } else {
-                        parkedCar.setColor(Color.blue);
-                    }
-                    drawCar(g2, parkedCar);
-                    parkedCar = null; // prevent what I assume is a memory leak
-                }
             }
         }
 

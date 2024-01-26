@@ -30,35 +30,29 @@ public class CarGame extends Game{
 
 
 
-@Override
+    @Override
     public void update(){
 
         if(keyH.upPressed) {
             playerCar.gas(0.1);
-            //out.println("GAS, speed: " + playerCar.currentSpeed);
-
-
         }
         else if(keyH.downPressed) {
             playerCar.brake(0.1);
-            //out.println("BRAKE, speed: " + playerCar.currentSpeed);
-
         }
 
         else if(keyH.leftPressed) {
             playerCar.turnLeft();
-
-
         }
+
         else if(keyH.rightPressed) {
             playerCar.turnRight();
+        }
 
-
-        } else if(keyH.twoPressed){
-
+        else if(keyH.twoPressed){
             keyH.twoPressed = false;
-        } else if(keyH.onePressed){
+        }
 
+        else if(keyH.onePressed){
             keyH.onePressed = false;
         }
 
