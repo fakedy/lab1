@@ -5,7 +5,7 @@ import java.awt.event.KeyListener;
 
 public class KeyHandler implements KeyListener {
 
-    public boolean upPressed, downPressed,leftPressed,rightPressed, twoPressed, onePressed;
+    public boolean upPressed, downPressed,leftPressed,rightPressed, twoPressed, onePressed, controlPressed, spacePressed;
 
     @Override
     public void keyTyped(KeyEvent e) {
@@ -38,6 +38,12 @@ public class KeyHandler implements KeyListener {
 
         if(code == KeyEvent.VK_2)
             twoPressed = true;
+
+        if(code == KeyEvent.VK_SPACE)
+            spacePressed = true;
+
+        if(code == KeyEvent.VK_CONTROL)
+            controlPressed = true;
 
 
 
