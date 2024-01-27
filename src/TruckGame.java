@@ -67,8 +67,11 @@ public class TruckGame extends Game {
         else if(keyH.spacePressed){
             if(!parkedCars.isEmpty()) {
                 Car car = findClosestCar();
-                playerTruck.loadCar(car);
-                System.out.println("loading car");
+                if(playerTruck.loadCar(car)){
+                    parkedCars.remove(car);
+                } else {
+                    System.out.println("failed to load car");
+                }
             }
             keyH.spacePressed = false;
         }
@@ -169,6 +172,8 @@ public class TruckGame extends Game {
         }
     }
 
+
+    // Please ignore all this mess :)
     private void drawParkingLot(Graphics2D g2){
 
         for(int x = 0; x < screenWidth; x = x+50){
@@ -228,7 +233,6 @@ public class TruckGame extends Game {
         drawTruckShadow(g2, car);
 
 
-
         // body
         g2.setColor(car.getColor());
         g2.fillRect(carX, carY, truckBodySize.x,truckBodySize.y);
@@ -244,7 +248,6 @@ public class TruckGame extends Game {
         drawTruckBed(g2,car);
         g2.setTransform(oldTransform);
 
-
     }
 
     private void drawTruckBed(Graphics2D g2, Car car){
@@ -254,7 +257,7 @@ public class TruckGame extends Game {
         int carX = (int) car.position.x;
         int carY = (int) car.position.y;
 
-        Utils.Vector2i  truckBedSize = new Utils.Vector2i(carBodySize.x * playerTruck.getLoadCapacity(), carBodySize.y+10);
+        Utils.Vector2i  truckBedSize = new Utils.Vector2i((carBodySize.x+10) * playerTruck.getLoadCapacity(), carBodySize.y+10);
         Utils.Vector2i  truckBedAnchor = new Utils.Vector2i((int) (carX + truckBodySize.x + Math.cos(car.angle)*-truckBodySize.x), (int) (carY + Math.sin(car.angle)*-truckBodySize.x));
 
         AffineTransform transform = new AffineTransform();
@@ -262,21 +265,11 @@ public class TruckGame extends Game {
 
 
 
-        //transform.rotate(-car.angle, carX+(truckBodySize.x), carY+(truckBodySize.y/2));
         transform.rotate(-car.angle, truckBedAnchor.x, truckBedAnchor.y);
 
+        drawTruckBedShadow(g2, car);
         g2.setTransform(transform);
 
-        /*
-
-
-
-            lastCarX = (int) (carX + carBodySize.x + Math.cos(car.angle)*-carBodySize.x);
-            lastCarY = (int) (carY + Math.sin(car.angle)*-carBodySize.x);
-
-
-         */
-        //drawCarShadow(g2, car);
 
 
         // body
@@ -290,6 +283,103 @@ public class TruckGame extends Game {
 
         g2.fillRect(truckBedAnchor.x - truckWheelSize.x-10, truckBedAnchor.y + truckBedSize.y , truckWheelSize.x, truckWheelSize.y); // Front right wheel
         g2.fillRect(truckBedAnchor.x - truckWheelSize.x-10, truckBedAnchor.y - truckWheelSize.y, truckWheelSize.x, truckWheelSize.y); // Front left wheel
+
+
+        drawCarsOnbed(g2, car, truckBedAnchor);
+        g2.setTransform(oldTransform);
+
+    }
+
+    private void drawCarsOnbed(Graphics2D g2, Car vehicle, Utils.Vector2i anchor){
+
+        // number chaos
+
+        int carIndex = 0;
+        for(Car car : playerTruck.getCargo()){
+
+
+            //drawCarOnBedShadows(g2, vehicle, anchor, carIndex);
+
+
+            // body
+            g2.setColor(car.getColor());
+            g2.fillRect((anchor.x - 55 - (carBodySize.x+10)*carIndex), anchor.y+5, carBodySize.x,carBodySize.y); // magic -55 number, tired.
+
+            // wheels
+            g2.setColor(Color.GRAY);
+
+            g2.fillRect((anchor.x - 55 - (carBodySize.x+10)*carIndex), anchor.y+5 + carBodySize.y , carWheelSize.x, carWheelSize.y); // Back right wheel
+            g2.fillRect((anchor.x - 55 - (carBodySize.x+10)*carIndex), anchor.y+5 - carWheelSize.y, carWheelSize.x, carWheelSize.y); // back left wheel
+
+            g2.fillRect(((anchor.x - 55 - (carBodySize.x+10)*carIndex) + carBodySize.x - carWheelSize.x), anchor.y+5 + carBodySize.y , carWheelSize.x, carWheelSize.y); // Front right wheel
+            g2.fillRect(((anchor.x - 55 - (carBodySize.x+10)*carIndex) + carBodySize.x - carWheelSize.x), anchor.y+5 - carWheelSize.y, carWheelSize.x, carWheelSize.y); // Front left wheel
+
+
+            carIndex++;
+
+        }
+
+
+
+    }
+
+    private void drawCarOnBedShadows(Graphics2D g2, Car car, Utils.Vector2i anchor, int carIndex){
+
+        AffineTransform transform = new AffineTransform();
+        AffineTransform oldTransform = g2.getTransform();
+
+        int carX = (int) car.position.x;
+        int carY = (int) car.position.y;
+        int carShadowX = (anchor.x - 55 - (carBodySize.x+10)*carIndex)-carBodySize.x/4;
+        int carShadowY = carY;
+
+        transform.rotate(-car.angle, anchor.x-(carBodySize.x), anchor.y-(carBodySize.y/2));
+
+        g2.setTransform(transform);
+        // body
+        g2.setColor(Color.BLACK);
+        g2.fillRect(carShadowX, carShadowY, carBodySize.x,carBodySize.y);
+
+        // wheels
+        g2.setColor(Color.BLACK);
+        g2.fillRect(carShadowX, carShadowY + carBodySize.y , carWheelSize.x, carWheelSize.y); // Back right wheel
+        g2.fillRect(carShadowX, carShadowY- carWheelSize.y, carWheelSize.x, carWheelSize.y); // back left wheel
+
+        g2.fillRect(carShadowX + carBodySize.x - carWheelSize.x, carShadowY + carBodySize.y , carWheelSize.x, carWheelSize.y); // Front right wheel
+        g2.fillRect(carShadowX + carBodySize.x - carWheelSize.x, carShadowY - carWheelSize.y, carWheelSize.x, carWheelSize.y); // Front left wheel
+
+        g2.setTransform(oldTransform);
+
+
+    }
+
+    private void drawTruckBedShadow(Graphics2D g2, Car car){
+
+        AffineTransform transform = new AffineTransform();
+        AffineTransform oldTransform = g2.getTransform();
+
+        Utils.Vector2i  truckBedSize = new Utils.Vector2i((carBodySize.x+10) * playerTruck.getLoadCapacity(), carBodySize.y+10);
+        Utils.Vector2i  truckBedAnchor = new Utils.Vector2i((int) (carX + truckBodySize.x + Math.cos(car.angle)*-truckBodySize.x), (int) (carY + Math.sin(car.angle)*-truckBodySize.x));
+
+        int carX = (int) car.position.x;
+        int carY = (int) car.position.y;
+        int carShadowX = truckBedAnchor.x-truckBedSize.x-10-carBodySize.x/4;
+        int carShadowY = carY;
+
+        transform.rotate(-car.angle, truckBedAnchor.x-carBodySize.x/4, truckBedAnchor.y-carBodySize.y/2);
+
+        g2.setTransform(transform);
+        // body
+        g2.setColor(Color.BLACK);
+        g2.fillRect(carShadowX, truckBedAnchor.y, truckBedSize.x,truckBedSize.y);
+
+        // wheels
+        g2.setColor(Color.BLACK);
+        g2.fillRect(carShadowX, truckBedAnchor.y + truckBedSize.y , truckWheelSize.x, truckWheelSize.y); // Back right wheel
+        g2.fillRect(carShadowX, truckBedAnchor.y- truckWheelSize.y, truckWheelSize.x, truckWheelSize.y); // back left wheel
+
+        g2.fillRect(carShadowX, truckBedAnchor.y + truckBedSize.y , truckWheelSize.x, truckWheelSize.y); // Front right wheel
+        g2.fillRect(carShadowX, truckBedAnchor.y - truckWheelSize.y, truckWheelSize.x, truckWheelSize.y); // Front left wheel
 
         g2.setTransform(oldTransform);
 

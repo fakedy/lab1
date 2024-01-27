@@ -107,7 +107,8 @@ public abstract class Car implements Movable{
     public void move() {
         diff = new Utils.Vector2d(forceDirection.x - rotation.x, forceDirection.y - rotation.y);
         rotation = new Utils.Vector2d(rotation.x + (diff.x/80), rotation.y + (diff.y/80));
-        position = new Utils.Vector2d((float) (position.x + rotation.x*currentSpeed), (float) (position.y+ rotation.y*currentSpeed));
+        position.setX((position.x + rotation.x*currentSpeed));  // this lets us keep our original reference
+        position.setY((position.y+ rotation.y*currentSpeed));
     }
 
 

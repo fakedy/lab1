@@ -1,7 +1,6 @@
 package src;
 
 import java.awt.*;
-import java.sql.Array;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
@@ -20,10 +19,14 @@ public class VolvoVAH300 extends Truck{
     }
 
 
-    public void loadCar(Car car){
+    public boolean loadCar(Car car){
         if(getCurrentSpeed() == 0 && cargo.size() < loadCapacity){
+            car.position = this.position;
             cargo.add(car);
+            System.out.println("car successfully added");
+            return true;
         }
+        return false;
     }
 
     public void unloadCar(){
@@ -33,6 +36,10 @@ public class VolvoVAH300 extends Truck{
 
     public int getLoadCapacity(){
         return this.loadCapacity;
+    }
+
+    public Deque<Car> getCargo(){
+        return cargo;
     }
 
 
