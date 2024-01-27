@@ -27,6 +27,13 @@ public class TruckGame extends Game {
 
     VolvoVAH300 playerTruck = new VolvoVAH300();
 
+    Workshop[] workshops = new Workshop[]{
+            new Workshop(new Utils.Vector2i(900,20),4, new String[]{"Volvo240"}),
+            new Workshop(new Utils.Vector2i(60,200),4, new String[]{"Saab95"}),
+            new Workshop(new Utils.Vector2i(1300,400),4, new String[]{})
+    };
+
+
     public TruckGame () {
 
         fillParkingLot();
@@ -145,6 +152,17 @@ public class TruckGame extends Game {
             drawCar(g2, parkedCar);
         }
 
+        drawWorkshops(g2);
+
+    }
+
+    public void drawWorkshops(Graphics2D g2){
+
+        for(Workshop workshop : workshops){
+            Utils.Vector2i pos = workshop.getPosition();
+            g2.fillRect(pos.x,pos.y, 100, 50);
+        }
+
     }
 
     public void drawHUD(Graphics g) {
@@ -173,8 +191,6 @@ public class TruckGame extends Game {
             }
         }
     }
-
-
     // Please ignore all this mess :)
     private void drawParkingLot(Graphics2D g2){
 

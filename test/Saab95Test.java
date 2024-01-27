@@ -1,5 +1,4 @@
 import junit.framework.TestCase;
-import src.Car;
 import src.Saab95;
 
 public class Saab95Test extends TestCase {
