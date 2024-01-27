@@ -14,23 +14,26 @@ public class VolvoVAH300 extends Truck{
 
 
 
-    VolvoVAH300(){
+    public VolvoVAH300(){
         super("VolvoVAH300", 4, Color.GREEN, 150);
     }
 
 
     public boolean loadCar(Car car){
-        if(getCurrentSpeed() == 0 && cargo.size() < loadCapacity){
-            car.position = this.position;
-            cargo.add(car);
-            System.out.println("car successfully added");
-            return true;
+        if(!(car instanceof Truck)){
+            if(rampAngle == 0 && getCurrentSpeed() == 0 && cargo.size() < loadCapacity && this.position.dist(car.position) < 300){
+                car.position = this.position;
+                cargo.add(car);
+                System.out.println("car successfully added");
+                return true;
+            }
         }
+
         return false;
     }
 
     public void unloadCar(){
-        if(getCurrentSpeed() == 0 && !cargo.isEmpty())
+        if(rampAngle == 0 && getCurrentSpeed() == 0 && !cargo.isEmpty())
             cargo.pop();
     }
 
@@ -42,29 +45,12 @@ public class VolvoVAH300 extends Truck{
         return cargo;
     }
 
+    @Override
+    protected double speedFactor(){
+        if(rampAngle < 70)
+            return enginePower*0;
 
-    // The VolvoVAH300 got an automatic ramp although its crazy fast at raising and lowering :)
-    @Override
-    public void raiseRamp(){
-        while(!rampIsUp && getCurrentSpeed() == 0) {
-            if( rampAngle < 70) {
-                rampAngle += 0.01f;
-            } else {
-                rampAngle = 70;
-                rampIsUp = true;
-            }
-        }
-    }
-    @Override
-    public void lowerRamp(){
-        while(rampIsUp && getCurrentSpeed() == 0) {
-            if (rampAngle > 0) {
-                rampAngle -= 0.01f;
-            } else {
-                rampAngle = 0;
-                rampIsUp = false;
-            }
-        }
+        return enginePower * 0.01;
     }
 
 }

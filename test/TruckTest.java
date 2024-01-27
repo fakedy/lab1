@@ -6,20 +6,35 @@ public class TruckTest extends TestCase {
 
     Truck truck = new Scania();
 
-    public void testRaiseFlatbed() {
+    public void testRaiseRamp() {
+        truck.lowerRamp();
         float angle = truck.getRampAngle();
         truck.raiseRamp();
         assert(truck.getRampAngle() > angle);
     }
 
-    public void testLowerFlatbed() {
+    public void testLowerRamp() {
         truck.raiseRamp();
         float angle = truck.getRampAngle();
         truck.lowerRamp();
         assert(truck.getRampAngle() < angle);
     }
 
-    public void testGetFlatbedAngle() {
-        assertEquals(0, truck.getRampAngle());
+    public void testGetRampAngle() {
+        assertEquals(70f, truck.getRampAngle());
     }
+
+
+    public void testSpeedFactor(){
+
+        while(truck.getRampAngle() != 0){
+            truck.lowerRamp();
+        }
+        truck.gas(0.1);
+        assert(truck.getCurrentSpeed() > 0);
+    }
+
+
+
+
 }

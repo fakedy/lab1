@@ -150,8 +150,10 @@ public class TruckGame extends Game {
     public void drawHUD(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
 
-        g2.setColor(Color.black);
+        g2.setColor(Color.white);
+
         g2.drawString("Speed of car",20, screenHeight-100);
+        g2.drawString("ramp angle: " + playerTruck.rampAngle,20, 100);
         g2.setColor(Color.blue);
         g2.fillRect(30,screenHeight-50, (int) playerTruck.getCurrentSpeed()*20, 40);
     }
@@ -264,8 +266,10 @@ public class TruckGame extends Game {
         AffineTransform oldTransform = g2.getTransform();
 
 
+        double rotateFactor = -car.angle;
 
-        transform.rotate(-car.angle, truckBedAnchor.x, truckBedAnchor.y);
+        transform.rotate(rotateFactor, truckBedAnchor.x, truckBedAnchor.y);
+
 
         drawTruckBedShadow(g2, car);
         g2.setTransform(transform);

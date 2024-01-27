@@ -10,7 +10,13 @@ public class Scania extends Truck {
 
     }
 
+    @Override
+    protected double speedFactor(){
+        if(rampAngle > 0)
+            return enginePower*0;
 
+        return enginePower * 0.01;
+    }
 
 
 
