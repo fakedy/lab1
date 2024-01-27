@@ -16,7 +16,7 @@ public class VolvoVAH300 extends Truck{
 
 
     VolvoVAH300(){
-        super("VolvoVAH300", 4, Color.pink, 150);
+        super("VolvoVAH300", 4, Color.GREEN, 150);
     }
 
 
@@ -29,6 +29,10 @@ public class VolvoVAH300 extends Truck{
     public void unloadCar(){
         if(getCurrentSpeed() == 0 && !cargo.isEmpty())
             cargo.pop();
+    }
+
+    public int getLoadCapacity(){
+        return this.loadCapacity;
     }
 
 
