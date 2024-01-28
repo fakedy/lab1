@@ -28,9 +28,9 @@ public class TruckGame extends Game {
     VolvoVAH300 playerTruck = new VolvoVAH300();
 
     Workshop[] workshops = new Workshop[]{
-            new Workshop(new Utils.Vector2i(900,20),4, new String[]{"Volvo240"}),
-            new Workshop(new Utils.Vector2i(60,200),4, new String[]{"Saab95"}),
-            new Workshop(new Utils.Vector2i(1300,400),4, new String[]{})
+            new Workshop(new Utils.Vector2i(900,20),4, new Car[]{new Volvo240()}),
+            new Workshop(new Utils.Vector2i(60,200),4, new Car[]{new Saab95()}),
+            new Workshop(new Utils.Vector2i(1300,400),4, new Car[]{})
     };
 
 

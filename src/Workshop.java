@@ -6,13 +6,13 @@ public class Workshop {
 
     private final int capacity;
     private final ArrayList<Car> cars;
-    private final String[] allowedCars;
+    private final Car[] allowedCars;
 
 
 
     private final Utils.Vector2i position;
 
-    Workshop(Utils.Vector2i position, int capacity, String[] allowedCars){
+    Workshop(Utils.Vector2i position, int capacity, Car[] allowedCars){
         this.position = position;
         this.capacity = capacity;
         cars = new ArrayList<>(capacity);
@@ -21,6 +21,8 @@ public class Workshop {
 
     public void loadCar(Car car){
 
+    }
+    public void loadCar(Volvo240 car){
 
     }
 
